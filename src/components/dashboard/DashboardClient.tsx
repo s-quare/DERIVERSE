@@ -9,6 +9,7 @@ import StatCard from "@/components/dashboard/StatCard";
 import PnLChart from "./PnLChart";
 import TradeTable from "./TradeTable";
 import TopTokens from "./TopTokens";
+import FadeIn from "./FadeMotion";
 
 export default function DashboardClient() {
   const { publicKey, connected } = useWallet();
@@ -29,20 +30,22 @@ export default function DashboardClient() {
 
   useEffect(() => {
     if (connected) {
-        setIsMockMode(false);
+      setIsMockMode(false);
     }
-  }, [connected])
+  }, [connected]);
 
   return (
     <div className="space-y-10">
       <section className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight">
-            Pro <span className="text-blue-500">Analytics</span>
-          </h1>
-          <p className="text-slate-400 mt-1">
-            On-chain insights for the Deriverse ecosystem.
-          </p>
+          <FadeIn activeKey={"real"}>
+            <h1 className="text-4xl font-extrabold tracking-tight">
+              Pro <span className="text-blue-500">Analytics</span>
+            </h1>
+            <p className="text-slate-400 mt-1">
+              On-chain insights for the Deriverse ecosystem.
+            </p>
+          </FadeIn>
 
           <div
             title={
@@ -63,80 +66,89 @@ export default function DashboardClient() {
             </div>
           </div>
         </div>
-        {solPrice && (
+        {solPrice && solPrice !== 0 && (
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-1 self-start">
             <span className="text-blue-400 text-sm font-bold">
-              SOL: ${solPrice}{" "}
+              <span> SOL: ${solPrice}</span>
               <i
-                className={`bi ${priceChange >= 0 ? "text-green-500 bi-arrow-up" : "text-red-500 bi-arrow-down"}`}
+                className={`ml-2 bi ${priceChange >= 0 ? "text-green-500 bi-arrow-up" : "text-red-500 bi-arrow-down"}`}
               ></i>
+              <span
+                className={`text-[10px] ${priceChange >= 0 ? "text-green-500" : "text-red-500"}`}
+              >
+                {priceChange.toFixed(1)}%
+              </span>
             </span>
           </div>
         )}
       </section>
 
-      {!connected && !isMockMode && (
-        <div className="flex h-64 px-10 text-center items-center justify-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/20 backdrop-blur-sm">
-          <p className="text-slate-500">
-            Connect your wallet to view analysis, or switch to demo mode for a
-            preview with sample data.
-          </p>
-        </div>
-      )}
-
-      {(connected || isMockMode) && (
-        <>
-          <p className="text-base text-center font-mono font-bold">
-            Showing {isMockMode ? "Mock" : "Real-time Account"} Analysis
-          </p>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard
-              label="Total Trades"
-              value={stats.totalTrades}
-              loading={tradesLoading}
-            />
-            <StatCard
-              label="Win Rate"
-              value={`${stats.winRate}%`}
-              trend={2.4}
-              loading={tradesLoading}
-            />
-            <StatCard
-              label="Total Fees"
-              value={`$${usdFees}`}
-              loading={tradesLoading || priceLoading}
-            />
-            <StatCard
-              label="Avg Duration"
-              value={stats.avgDuration}
-              loading={tradesLoading}
-            />
+      <FadeIn activeKey={isMockMode ? "demo" : "real"}>
+        {!connected && !isMockMode && (
+          <div className="flex h-64 px-10 w-full max-w-150 mx-auto text-center items-center justify-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/20 ">
+            <p className="text-slate-500">
+              Connect your wallet to view analysis, or switch to demo mode for a
+              preview with sample data.
+            </p>
           </div>
+        )}
+      </FadeIn>
 
-          <div className="grid gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <PnLChart />
+      <FadeIn activeKey={isMockMode ? "demo" : "real"}>
+        {(connected || isMockMode) && (
+          <div className="space-y-10">
+            <p className="text-base text-center font-mono font-bold">
+              Showing {isMockMode ? "Mock" : "Real-time Account"} Analysis
+            </p>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <StatCard
+                label="Total Trades"
+                value={stats.totalTrades}
+                loading={tradesLoading}
+              />
+              <StatCard
+                label="Win Rate"
+                value={`${stats.winRate}%`}
+                trend={2.4}
+                loading={tradesLoading}
+              />
+              <StatCard
+                label="Total Fees"
+                value={`$${usdFees}`}
+                loading={tradesLoading || priceLoading}
+              />
+              <StatCard
+                label="Avg Duration"
+                value={stats.avgDuration}
+                loading={tradesLoading}
+              />
             </div>
-            <div className="space-y-6">
-              <TopTokens trades={trades || []} />
 
-              <div className="rounded-xl border border-slate-800 bg-slate-900/10 p-4">
-                <p className="text-[11px] text-slate-500 uppercase tracking-widest font-bold">
-                  Terminal Status
-                </p>
-                <div className="mt-2 flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-xs text-slate-400">
-                    Live Mainnet Feed
-                  </span>
+            <div className="grid gap-8 lg:grid-cols-3">
+              <div className="lg:col-span-2">
+                <PnLChart />
+              </div>
+              <div className="space-y-6">
+                <TopTokens trades={trades || []} />
+
+                <div className="rounded-xl border border-slate-800 bg-slate-900/10 p-4">
+                  <p className="text-[11px] text-slate-500 uppercase tracking-widest font-bold">
+                    Terminal Status
+                  </p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-xs text-slate-400">
+                      Live Mainnet Feed
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <TradeTable trades={trades || []} isLoading={tradesLoading} />
-        </>
-      )}
+            <TradeTable trades={trades || []} isLoading={tradesLoading} />
+          </div>
+        )}
+      </FadeIn>
     </div>
   );
 }

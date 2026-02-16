@@ -6,7 +6,15 @@ export interface TradeStats {
   avgDuration: string; 
 }
 
-export function calculateStats(trades: any[]) {
+interface Trade {
+  fee?: number;
+  error?: boolean;
+  type: string;
+  description: string;
+  timestamp: number;
+}
+
+export function calculateStats(trades: Trade[]) {
   if (!trades || trades.length === 0) {
     return { totalTrades: 0, winRate: 0, totalFees: 0, avgDuration: "N/A" };
   }

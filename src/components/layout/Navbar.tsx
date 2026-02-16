@@ -11,9 +11,9 @@ const WalletMultiButton = dynamic(
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-linear-to-b from-white/10 to-transparent backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full bg-transparent backdrop-blur-3xl border-b border-slate-800">
       <nav
-        className="container mx-auto flex h-16 items-center justify-between px-4"
+        className="mx-auto flex h-16 items-center justify-between px-4 sm:px-10 md:px-14"
         aria-label="Main Navigation"
       >
         <h2 className="text-base sm:text-xl font-sans font-bold tracking-tight text-white">

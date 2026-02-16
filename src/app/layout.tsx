@@ -30,9 +30,9 @@ export default function RootLayout({
         className={`bg-black text-slate-50 antialiased ${inter.className}`}
       >
         <ClientWalletWrapper>
-          <div className="relative flex min-h-screen flex-col">
+          <div className="relative flex min-h-screen flex-col max-w-300 mx-auto">
             <Navbar />
-            <main className="flex-1 container mx-auto px-4 py-8">
+            <main className="flex-1 mx-auto px-4 sm:px-10 md:px-14 py-8 w-full">
               {children}
             </main>
           </div>

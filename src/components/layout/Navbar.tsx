@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import InfoModal from "./InfoModal";
 
 const WalletMultiButton = dynamic(
@@ -20,8 +19,10 @@ export default function Navbar() {
         <h2 className="text-base sm:text-xl font-sans font-bold tracking-tight text-white">
           DERIVERSE<span className="text-blue-500">Analytics</span>
         </h2>
-        <div className="flex items-center gap-4">
-          <WalletMultiButton />
+        <div className="flex items-center gap-3">
+          <div className="scale-70 md:scale-90 transition-all">
+            <WalletMultiButton />
+          </div>
           <InfoModal />
         </div>
       </nav>
